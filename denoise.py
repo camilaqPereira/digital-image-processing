@@ -1,27 +1,27 @@
-# Importing packages
+# Importing packages #
 import cv2 as cv
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-from google.colab.patches import cv2_imshow #for Google Colab or Jupyter Notebooks
+#from google.colab.patches import cv2_imshow #for Google Colab or Jupyter Notebooks
 
-# Reading the image
+# Reading the image #
 
-img = cv.imread('/content/drive/MyDrive/digital_image_processing_fundamentals/Avaliacao_2/lena256x256.tif',cv.IMREAD_GRAYSCALE)
+img = cv.imread('lena256x256.tif',cv.IMREAD_GRAYSCALE)
 
 # Google Colab
-cv2_imshow(img)
+#cv2_imshow(img)
+
 # OpenCV
-#cv.show('Lena original',img)
+cv.imshow('Lena original',img)
 
 # Getting the size of the image
 height = img.shape[0] #M
 width = img.shape[1] #N
-intensities = 256
-
-img = img.astype(float)
 
 # Adding the periodic noise to the original image
+img = img.astype(np.float32)
+
 noise_values, noisy_img = np.zeros((height,width)), np.zeros((height,width))
 
 fre = 100/height
@@ -32,13 +32,12 @@ for i in range(height):
 
 noisy_img = np.add(img, noise_values)
 
-# Plotting image
-
-# showing image with Google Colab or Jupyter Notebook
-cv2_imshow(noisy_img)
+# Plotting image with noise #
+#Google Colab 
+#cv2_imshow(noisy_img)
 
 # OpenCV
-#cv.show('Lena com ruído',negative_img)
+cv.imshow('Lena com ruido',noisy_img.astype(np.uint8))
 
 
 # Applying the fourier transform to the original and noisy images #
@@ -54,7 +53,7 @@ FNshift = np.fft.fftshift(Fn)
 FNabs = np.abs(FNshift)
 
 
-# plotting the magnitudes of the original and noisy transforms #
+# Plotting the magnitudes of the original and noisy transforms #
 # on a logarithmic scale #
 
 #Original image
@@ -62,19 +61,16 @@ c = 15/math.log(Fabs.max(),10)
 D = [[c*math.log(1+num) for num in line] for line in Fabs]
 z = np.abs(D)
 
-plt.figure(figsize=(10,10))
-plt.subplot(1,2,1)
-plt.imshow(z, cmap=plt.cm.gray, interpolation="none")
-plt.axis("off")
-plt.show()
-
-
 #Noisy image
 cn = 15/math.log(FNabs.max(),10)
 Dn = [[cn*math.log(1+num) for num in line] for line in FNabs]
 zn = np.abs(Dn)
 
-plt.figure(figsize=(10,10))
+
+plt.subplot(1,2,1)
+plt.imshow(z, cmap=plt.cm.gray, interpolation="none")
+plt.axis("off")
+
 plt.subplot(1,2,2)
 plt.imshow(zn, cmap=plt.cm.gray, interpolation="none")
 plt.axis("off")
@@ -92,7 +88,7 @@ for position in positions:
   FNshift[position[0]][position[1]] = 0
 
 
-# Plotting the new magnitude
+# Plotting the new magnitude #
 FNabs = abs(FNshift)
 
 cn2 = 15/math.log(FNabs.max(),10)
@@ -107,8 +103,13 @@ plt.show()
 
 # Showing final image #
 img_recons = abs(np.fft.ifft2(FNshift))
-cv2_imshow(img_recons)
+#cv2_imshow(img_recons)
 
 # OpenCV
-#cv.show('Lena sem ruído',img_recons)
+#cv.imshow('Lena sem ruido',img_recons.astype(np.uint8))
+plt.imshow(img_recons,cmap=plt.cm.gray)
+plt.axis('off')
+plt.show()
+
+cv.waitKey(0)
 
