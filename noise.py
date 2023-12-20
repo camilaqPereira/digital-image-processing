@@ -26,7 +26,7 @@ width = img.shape[1] #N
 
 img = img.astype(np.float32)
 
-noise_values, noisy_img = np.zeros((height,width)), np.zeros((height,width))
+noise_values, noisy_img = np.zeros((height,width), dtype=np.float32), np.zeros((height,width),dtype=np.float32)
 
 fre = 100/height
 
@@ -35,14 +35,11 @@ for i in range(height):
     noise_values[j][i] = 400*(math.sin( (2*math.pi*fre)*i))
 
 noisy_img = np.add(img, noise_values)
-noisy_img = noisy_img.astype(np.uint8)
 
 
 # Plotting image #
+plt.imshow(noisy_img,cmap=plt.cm.gray, interpolation='none')
+plt.axis('off')
+plt.show()
 
-#Google Colab
-#cv2_imshow(noisy_img)
-
-# OpenCV
-cv.imshow('Lena com ruido',noisy_img)
 cv.waitKey(0)
