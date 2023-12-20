@@ -22,7 +22,7 @@ width = img.shape[1] #N
 # Adding the periodic noise to the original image
 img = img.astype(np.float32)
 
-noise_values, noisy_img = np.zeros((height,width)), np.zeros((height,width))
+noise_values, noisy_img = np.zeros((height,width),dtype=np.float32), np.zeros((height,width),dtype=np.float32)
 
 fre = 100/height
 
@@ -33,11 +33,11 @@ for i in range(height):
 noisy_img = np.add(img, noise_values)
 
 # Plotting image with noise #
-#Google Colab 
-#cv2_imshow(noisy_img)
 
 # OpenCV
-cv.imshow('Lena com ruido',noisy_img.astype(np.uint8))
+plt.imshow(noisy_img,cmap=plt.cm.gray, interpolation='none')
+plt.axis('off')
+plt.show()
 
 
 # Applying the fourier transform to the original and noisy images #
@@ -66,7 +66,17 @@ cn = 15/math.log(FNabs.max(),10)
 Dn = [[cn*math.log(1+num) for num in line] for line in FNabs]
 zn = np.abs(Dn)
 
+plt.figure()
+plt.subplot(1,2,1)
+plt.imshow(Fabs, cmap=plt.cm.gray, interpolation="none")
+plt.axis("off")
 
+plt.subplot(1,2,2)
+plt.imshow(FNabs, cmap=plt.cm.gray, interpolation="none")
+plt.axis("off")
+plt.show()
+
+plt.figure()
 plt.subplot(1,2,1)
 plt.imshow(z, cmap=plt.cm.gray, interpolation="none")
 plt.axis("off")
@@ -107,7 +117,7 @@ img_recons = abs(np.fft.ifft2(FNshift))
 
 # OpenCV
 #cv.imshow('Lena sem ruido',img_recons.astype(np.uint8))
-plt.imshow(img_recons,cmap=plt.cm.gray)
+plt.imshow(img_recons,cmap=plt.cm.gray, interpolation="none")
 plt.axis('off')
 plt.show()
 
